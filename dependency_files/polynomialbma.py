@@ -1,3 +1,18 @@
+
+'''
+This file contains code that will create some randomized data points based on a parabolic model, 
+fit a parabola, a line, and a cubic to this data, will sample thses models using MCMC, and
+use the resulting MCMC chains with Simone Paradiso's FastMPC code to return Bayesian Model
+Averaged parameter distributions for the model parameters.
+'''
+
+'''
+Directories that require changing (to work on your own device):
+
+runmcmcs -> 'chainpath ='
+'''
+
+#imports ---------------------------------------------------------------
 import numpy as np
 import matplotlib.pyplot as plt
 import emcee
@@ -16,9 +31,36 @@ import matplotlib.pyplot as plt
 from getdist.plots import GetDistPlotter
 
 
+# Main Program Functions -----------------------------------------------
+
 def createfit(noise, atrue, btrue, ctrue, index):
+    '''
+    This function creates randomized data from a parabola model, and then attempts to fit a line, parabola
+    and cubic to the data. 
+
+    Currently, the code to calculate and display the fits is commented out for a cleaner output. The remainder
+    of the function calculates the likelihood, prior, and posterior for each fit, and returns this information
+    for later use.
+
+    Parameters:
+    -----------
+    noise: float representing level of noise to be used, usually somewhere between 0.1 and 1.5
+    atrue: float, the true value for the parabola's 'a' parameter, i.e. a*x^2
+    btrue: float, the true value for the parabola's 'b' parameter, i.e. b*x
+    ctrue: float, the true value for the parabola's 'c' parameter, i.e. + c
+    index: int, useful if running this function multiple times in the same run, i.e. to change the noise,
+            true values, etc. This function sets up the name of the folder that will hold the MCMC chains, 
+            and Cobaya doesn't like it if this folder name already exists. The index will take the name
+            of the output folder, currently 'chainstriple' and add the corresponding number at the end
+            to make the folder name different.
+
+    Returns:
+    --------
+    infopara, infolin, infocube: three dictionaries in Cobaya format that will be used to take MCMC samples later
+    '''
+
+
     #Step 1: create truth
-    
     ftrue=0.5
 
     #Step 2: generate random data around this model
@@ -227,6 +269,18 @@ def createfit(noise, atrue, btrue, ctrue, index):
     # here
 
 def runmcmcs(infopara, infolin, infocube, atrue, btrue, ctrue, index):
+
+    '''
+    This function takes the model information obtaind in createfits(), samples them using Cobaya MCMC sampling,
+    combines the samples using FastMPC BMA, and creates a triangle plot comparing them.
+
+    Parameters:
+    -----------
+    infopara, infolin, infocube: dict, info about the different model parameter distributions, output from createfit()
+    atrue, btrue, ctrue: float, true parabolc parameter values
+    index: int, to use output folders of different names if run multiple times (see createfit() definition)
+
+    '''
     
     #MODEL RUNS
     updated_infopara, samplerpara = run(infopara)
