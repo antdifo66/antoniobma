@@ -1,0 +1,3 @@
+This folder contains stacking and pseudo-BMA code.
+
+Some of the files might require slight changes, as they currently import and save data from addresses on my own device.
