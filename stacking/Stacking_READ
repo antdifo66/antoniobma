@@ -1,3 +1,8 @@
 This folder contains stacking and pseudo-BMA code.
 
 Some of the files might require slight changes, as they currently import and save data from addresses on my own device.
+
+The main file is plancklite_tri_BMA.ipynb, which requires the FastMPCarviz and nfcov_arviz4_dense files. Additional libraries are required, but these should all 
+be regularly installable.
+
+The cosmological data is imported from the 'data' folder.
